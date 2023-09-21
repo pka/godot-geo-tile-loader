@@ -59,8 +59,8 @@ func _run():
 		printerr("value._float_value != null")
 
 	var type = feature.get_type()
-	if type != 1: # ?? VectorTile.PB_DATA_TYPE.ENUM:
-		printerr("type != VectorTile.PB_DATA_TYPE.ENUM")
+	if type != VectorTile.Tile.GeomType.POINT:
+		printerr("type != VectorTile.Tile.GeomType.POINT")
 
 	var geometry = feature.get_geometry()
 	if geometry != [9, 1310, 3166]:
