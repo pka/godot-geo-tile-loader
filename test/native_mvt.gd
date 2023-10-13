@@ -6,6 +6,11 @@ func load_tile(fn) -> VectorTile:
 	var bytes = FileAccess.get_file_as_bytes(fn)
 	return VectorTile.read(bytes)
 
+func load_tile_gz(fn) -> VectorTile:
+	var bytes_gz = FileAccess.get_file_as_bytes(fn)
+	var bytes = bytes_gz.decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP)
+	return VectorTile.read(bytes)
+
 func _run():
 	var tile = VectorTile.new()
 	if tile.layers().size() != 0:
@@ -29,7 +34,11 @@ func _run():
 	#if layer.name() != "point":
 	#	printerr("layer.name() != cities")
 
-	tile = load_tile("res://test/data/tile.mvt")
+	tile = load_tile("test/data/tile.mvt")
+	if tile.layers().size() != 1:
+		printerr("tile.layers().size() != 1")
+
+	tile = load_tile_gz("test/data/tile.mvt.gz")
 	if tile.layers().size() != 1:
 		printerr("tile.layers().size() != 1")
 
