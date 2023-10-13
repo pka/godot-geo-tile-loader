@@ -22,6 +22,7 @@
 //! Generated file from `vector_tile.proto`
 // Generated for lite runtime
 
+use protobuf::Message;
 use godot::prelude::*;
 
 /// Generated files are compatible only with the same version
@@ -47,9 +48,28 @@ impl<'a> ::std::default::Default for &'a Tile {
     }
 }
 
+#[godot_api]
 impl Tile {
     pub fn new() -> Tile {
         ::std::default::Default::default()
+    }
+    #[func]
+    pub fn layers(&self) -> Array<Gd<tile::Layer>> {
+        Array::from_iter(self.layers.iter().map(|el| Gd::new(el.clone())))
+    }
+    #[func]
+    /// Read Tile from byte array
+    pub fn read(bytes: PackedByteArray) -> Gd<Tile> {
+        let tile = Tile::parse_from_bytes(bytes.as_slice()).unwrap();
+        Gd::new(tile)
+    }
+    /// Load Tile from file
+    #[func]
+    pub fn load(path: GodotString) -> Gd<Tile> {
+        let path = String::from_iter(path.chars_checked());
+        let bytes = std::fs::read(&path).unwrap();
+        let tile = Tile::parse_from_bytes(&bytes).unwrap();
+        Gd::new(tile)
     }
 }
 
@@ -128,6 +148,8 @@ impl ::protobuf::Message for Tile {
 
 /// Nested message and enums of message `Tile`
 pub mod tile {
+    use godot::prelude::*;
+
     // @@protoc_insertion_point(message:vector_tile.Tile.Value)
     #[derive(PartialEq,Clone,Default,Debug)]
     pub struct Value {
@@ -616,6 +638,8 @@ pub mod tile {
 
     // @@protoc_insertion_point(message:vector_tile.Tile.Layer)
     #[derive(PartialEq,Clone,Default,Debug)]
+    #[derive(GodotClass)]
+    #[class(init,rename=TileLayer)]
     pub struct Layer {
         // message fields
         // @@protoc_insertion_point(field:vector_tile.Tile.Layer.version)
@@ -641,6 +665,7 @@ pub mod tile {
         }
     }
 
+    #[godot_api]
     impl Layer {
         pub fn new() -> Layer {
             ::std::default::Default::default()
@@ -648,43 +673,59 @@ pub mod tile {
 
         // required uint32 version = 15;
 
+        #[func]
         pub fn version(&self) -> u32 {
             self.version.unwrap_or(1u32)
         }
 
+        #[func]
         pub fn clear_version(&mut self) {
             self.version = ::std::option::Option::None;
         }
 
+        #[func]
         pub fn has_version(&self) -> bool {
             self.version.is_some()
         }
 
         // Param is passed by value, moved
+        #[func]
         pub fn set_version(&mut self, v: u32) {
             self.version = ::std::option::Option::Some(v);
         }
 
         // required string name = 1;
 
-        pub fn name(&self) -> &str {
+        pub fn name_str(&self) -> &str {
             match self.name.as_ref() {
                 Some(v) => v,
                 None => "",
             }
         }
 
+        #[func]
+        pub fn name(&self) -> GodotString {
+            GodotString::from(self.name_str())
+        }
+
+        #[func]
         pub fn clear_name(&mut self) {
             self.name = ::std::option::Option::None;
         }
 
+        #[func]
         pub fn has_name(&self) -> bool {
             self.name.is_some()
         }
 
         // Param is passed by value, moved
-        pub fn set_name(&mut self, v: ::std::string::String) {
+        pub fn set_name_string(&mut self, v: ::std::string::String) {
             self.name = ::std::option::Option::Some(v);
+        }
+
+        #[func]
+        pub fn set_name(&mut self, v: GodotString) {
+            self.name = Some(v.into());
         }
 
         // Mutable pointer to the field.
@@ -703,19 +744,23 @@ pub mod tile {
 
         // optional uint32 extent = 5;
 
+        #[func]
         pub fn extent(&self) -> u32 {
             self.extent.unwrap_or(4096u32)
         }
 
+        #[func]
         pub fn clear_extent(&mut self) {
             self.extent = ::std::option::Option::None;
         }
 
+        #[func]
         pub fn has_extent(&self) -> bool {
             self.extent.is_some()
         }
 
         // Param is passed by value, moved
+        #[func]
         pub fn set_extent(&mut self, v: u32) {
             self.extent = ::std::option::Option::Some(v);
         }
@@ -915,4 +960,18 @@ pub mod tile {
         }
     }
 
+}
+
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn load_file() {
+        let bytes = std::fs::read("../test/data/tile.mvt").unwrap();
+        let tile = Tile::parse_from_bytes(&bytes).unwrap();
+        dbg!(&tile);
+        assert_eq!(tile.layers.len(), 1);
+    }
 }
