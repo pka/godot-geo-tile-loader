@@ -1,3 +1,5 @@
+pub mod vector_tile;
+
 use godot::prelude::*;
 
 struct MvtExtension;
