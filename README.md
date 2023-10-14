@@ -1,33 +1,24 @@
 # godot-geo-tile-loader
 
-A Rust-based Godot 4 extension, using [the gdextension crate](https://github.com/godot-rust/gdextension), for loading Mapbox Vector Tiles.
+A Rust-based Godot 4 extension, using the [gdextension crate](https://github.com/godot-rust/gdextension), 
+for loading Mapbox Vector Tiles.
 
-# Installation
 
-Create a directory `addons/geo-tile-loader`
+## Installation
 
-Download the latest build artifact from https://github.com/pka/godot-geo-tile-loader/actions
+Download the latest build artifact `godot-geo-tile-loader-plugin` from 
+https://github.com/pka/godot-geo-tile-loader/actions and unzip it in the base 
+directory of your Godot project.
 
-Unpack zip file in `addons/geo-tile-loader`.
 
-Create a file called `GeoTileLoader.gdextension` next to it that looks something like this:
+## Usage
 
-```
-[configuration]
-entry_symbol = "gdext_rust_init"
-compatibility_minimum = 4.1
+See the GDScript files in `test` as an example.
 
-[libraries]
-linux.x86_64 = "libgodot_mvt.so"
-windows.x86_64 = "godot_mvt.dll"
-macos = "libgodot_mvt.dylib"
-```
 
-# Building
+## Plugin developement
 
-First, make sure to follow the setup instructions for [the gdextension crate](https://github.com/godot-rust/gdextension). At the time of this writing, that includes setting the `GODOT4_BIN` environment variable to point to your Godot4 binary.
-Then...
-
+First, make sure to follow the setup instructions for [the gdextension crate](https://github.com/godot-rust/gdextension)
 `cd rust`
 
 `cargo build`
@@ -35,6 +26,3 @@ Then...
 Or for a release build:
 
 `cargo build --release`
-
-
-After building, copy `godot_mvt.dll` (or `.dylib` or `.so`) from `./target/release/` into addons directory.
