@@ -23,15 +23,19 @@ jobs:
         include:
         - target: x86_64-unknown-linux-gnu
           os: ubuntu-20.04
+          target_rustflags: '--release'
           ext: so
         - target: x86_64-pc-windows-msvc
           os: windows-latest
+          target_rustflags: '-j 1' # Workaround for "LLVM ERROR: out of memory"
           ext: dll
         - target: x86_64-apple-darwin
           os: macos-latest
+          target_rustflags: '--release'
           ext: dylib
         # - target: aarch64-apple-darwin
         #   os: macos-latest
+        #   target_rustflags: '--release'
         #   ext: dylib
 
     runs-on: ${{matrix.os}}
@@ -39,6 +43,7 @@ jobs:
     defaults:
       run:
         working-directory: ./rust
+        shell: bash
 
     steps:
     - uses: actions/checkout@v4
@@ -48,12 +53,16 @@ jobs:
 
     - name: Build release binary
       run: |
-        cargo build --release --locked --target ${{ matrix.target }}
+        cargo build --locked --target ${{ matrix.target }} ${{ matrix.target_rustflags }}
 
     - name: Prepare archive
       run: |
         mkdir dist
-        mv target/${{ matrix.target }}/release/*.${{ matrix.ext }} dist
+        if [[ "${{ runner.os }}" == "Windows" ]]; then
+          mv target/${{ matrix.target }}/debug/*.${{ matrix.ext }} dist
+        else
+          mv target/${{ matrix.target }}/release/*.${{ matrix.ext }} dist
+        fi
 
     - uses: actions/upload-artifact@v2
       with:
