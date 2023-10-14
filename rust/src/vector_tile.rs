@@ -31,7 +31,7 @@ const _PROTOBUF_VERSION_CHECK: () = ::protobuf::VERSION_3_3_0;
 
 // @@protoc_insertion_point(message:vector_tile.Tile)
 #[derive(GodotClass)]
-#[class(init, rename=VectorTile)]
+#[class(init, rename=MvtTile)]
 #[derive(PartialEq,Clone,Default,Debug)]
 pub struct Tile {
     // message fields
@@ -469,6 +469,8 @@ pub mod tile {
     }
 
     // @@protoc_insertion_point(message:vector_tile.Tile.Feature)
+    #[derive(GodotClass)]
+    #[class(init, rename=MvtFeature)]
     #[derive(PartialEq,Clone,Default,Debug)]
     pub struct Feature {
         // message fields
@@ -491,6 +493,7 @@ pub mod tile {
         }
     }
 
+    #[godot_api]
     impl Feature {
         pub fn new() -> Feature {
             ::std::default::Default::default()
@@ -498,41 +501,56 @@ pub mod tile {
 
         // optional uint64 id = 1;
 
-        pub fn id(&self) -> u64 {
+        pub fn id_u64(&self) -> u64 {
             self.id.unwrap_or(0u64)
         }
 
+        #[func]
+        pub fn id(&self) -> i64 {
+            self.id_u64() as i64
+        }
+
+        #[func]
         pub fn clear_id(&mut self) {
             self.id = ::std::option::Option::None;
         }
 
+        #[func]
         pub fn has_id(&self) -> bool {
             self.id.is_some()
         }
 
         // Param is passed by value, moved
-        pub fn set_id(&mut self, v: u64) {
+        pub fn set_id_u64(&mut self, v: u64) {
             self.id = ::std::option::Option::Some(v);
         }
 
+        #[func]
+        pub fn set_id(&mut self, v: i64) {
+            self.set_id_u64(v as u64);
+        }
         // optional .vector_tile.Tile.GeomType type = 3;
 
-        pub fn type_(&self) -> GeomType {
+        #[func]
+        pub fn geom_type(&self) -> GeomType {
             match self.type_ {
                 Some(e) => e.enum_value_or(GeomType::UNKNOWN),
                 None => GeomType::UNKNOWN,
             }
         }
 
+        #[func]
         pub fn clear_type_(&mut self) {
             self.type_ = ::std::option::Option::None;
         }
 
+        #[func]
         pub fn has_type(&self) -> bool {
             self.type_.is_some()
         }
 
         // Param is passed by value, moved
+        #[func]
         pub fn set_type(&mut self, v: GeomType) {
             self.type_ = ::std::option::Option::Some(::protobuf::EnumOrUnknown::new(v));
         }
@@ -639,7 +657,7 @@ pub mod tile {
     // @@protoc_insertion_point(message:vector_tile.Tile.Layer)
     #[derive(PartialEq,Clone,Default,Debug)]
     #[derive(GodotClass)]
-    #[class(init,rename=TileLayer)]
+    #[class(init,rename=MvtLayer)]
     pub struct Layer {
         // message fields
         // @@protoc_insertion_point(field:vector_tile.Tile.Layer.version)
@@ -763,6 +781,11 @@ pub mod tile {
         #[func]
         pub fn set_extent(&mut self, v: u32) {
             self.extent = ::std::option::Option::Some(v);
+        }
+
+        #[func]
+        pub fn features(&self) -> Array<Gd<Feature>> {
+            Array::from_iter(self.features.iter().map(|el| Gd::new(el.clone())))
         }
     }
 
@@ -908,6 +931,7 @@ pub mod tile {
 
     #[derive(Clone,Copy,PartialEq,Eq,Debug,Hash)]
     // @@protoc_insertion_point(enum:vector_tile.Tile.GeomType)
+    #[derive(FromGodot, ToGodot, GodotConvert)]
     pub enum GeomType {
         // @@protoc_insertion_point(enum_value:vector_tile.Tile.GeomType.UNKNOWN)
         UNKNOWN = 0,
