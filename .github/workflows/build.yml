@@ -59,12 +59,38 @@ jobs:
       run: |
         mkdir dist
         if [[ "${{ runner.os }}" == "Windows" ]]; then
-          mv target/${{ matrix.target }}/debug/*.${{ matrix.ext }} dist
+          mv target/${{ matrix.target }}/debug/*.${{ matrix.ext }} dist/
         else
-          mv target/${{ matrix.target }}/release/*.${{ matrix.ext }} dist
+          mv target/${{ matrix.target }}/release/*.${{ matrix.ext }} dist/
         fi
 
-    - uses: actions/upload-artifact@v2
+    - name: Save build artifacts
+      uses: actions/upload-artifact@v3
       with:
         name: release-builds
         path: rust/dist
+
+  package:
+    name: Package
+    needs: [build]
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Prepare archive
+      run: |
+        mkdir dist
+        mv addons dist/
+        cd dist/addons/geo-tile-loader
+        mv GeoTileLoader.gdextension.dist GeoTileLoader.gdextension
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: release-builds
+        path: dist/addons/geo-tile-loader/
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: godot-geo-tile-loader-plugin
+        path: dist
