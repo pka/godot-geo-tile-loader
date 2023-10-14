@@ -5,10 +5,7 @@
 // https://github.com/rust-lang/rust-clippy/issues/702
 #![allow(unknown_lints)]
 #![allow(clippy::all)]
-
 #![allow(unused_attributes)]
-#![cfg_attr(rustfmt, rustfmt::skip)]
-
 #![allow(box_pointers)]
 #![allow(dead_code)]
 #![allow(missing_docs)]
@@ -22,8 +19,8 @@
 //! Generated file from `vector_tile.proto`
 // Generated for lite runtime
 
-use protobuf::Message;
 use godot::prelude::*;
+use protobuf::Message;
 
 /// Generated files are compatible only with the same version
 /// of protobuf runtime.
@@ -32,7 +29,7 @@ const _PROTOBUF_VERSION_CHECK: () = ::protobuf::VERSION_3_3_0;
 // @@protoc_insertion_point(message:vector_tile.Tile)
 #[derive(GodotClass)]
 #[class(init, rename=MvtTile)]
-#[derive(PartialEq,Clone,Default,Debug)]
+#[derive(PartialEq, Clone, Default, Debug)]
 pub struct Tile {
     // message fields
     // @@protoc_insertion_point(field:vector_tile.Tile.layers)
@@ -81,7 +78,7 @@ impl ::protobuf::Message for Tile {
             if !v.is_initialized() {
                 return false;
             }
-        };
+        }
         true
     }
 
@@ -90,10 +87,14 @@ impl ::protobuf::Message for Tile {
             match tag {
                 26 => {
                     self.layers.push(is.read_message()?);
-                },
+                }
                 tag => {
-                    ::protobuf::rt::read_unknown_or_skip_group(tag, is, self.special_fields.mut_unknown_fields())?;
-                },
+                    ::protobuf::rt::read_unknown_or_skip_group(
+                        tag,
+                        is,
+                        self.special_fields.mut_unknown_fields(),
+                    )?;
+                }
             };
         }
         ::std::result::Result::Ok(())
@@ -106,16 +107,19 @@ impl ::protobuf::Message for Tile {
         for value in &self.layers {
             let len = value.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint64_size(len) + len;
-        };
+        }
         my_size += ::protobuf::rt::unknown_fields_size(self.special_fields.unknown_fields());
         self.special_fields.cached_size().set(my_size as u32);
         my_size
     }
 
-    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::Result<()> {
+    fn write_to_with_cached_sizes(
+        &self,
+        os: &mut ::protobuf::CodedOutputStream<'_>,
+    ) -> ::protobuf::Result<()> {
         for v in &self.layers {
             ::protobuf::rt::write_message_field_with_cached_size(3, v, os)?;
-        };
+        }
         os.write_unknown_fields(self.special_fields.unknown_fields())?;
         ::std::result::Result::Ok(())
     }
@@ -152,8 +156,7 @@ pub mod tile {
     use godot::prelude::*;
 
     // @@protoc_insertion_point(message:vector_tile.Tile.Value)
-    #[derive(PartialEq,Clone,Default,Debug)]
-    #[derive(GodotClass)]
+    #[derive(PartialEq, Clone, Default, Debug, GodotClass)]
     #[class(init,rename=MvtValue)]
     pub struct Value {
         // message fields
@@ -233,7 +236,9 @@ pub mod tile {
 
         // Take field
         pub fn take_string_value(&mut self) -> ::std::string::String {
-            self.string_value.take().unwrap_or_else(|| ::std::string::String::new())
+            self.string_value
+                .take()
+                .unwrap_or_else(|| ::std::string::String::new())
         }
 
         // optional float float_value = 2;
@@ -382,33 +387,40 @@ pub mod tile {
             true
         }
 
-        fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::Result<()> {
+        fn merge_from(
+            &mut self,
+            is: &mut ::protobuf::CodedInputStream<'_>,
+        ) -> ::protobuf::Result<()> {
             while let Some(tag) = is.read_raw_tag_or_eof()? {
                 match tag {
                     10 => {
                         self.string_value = ::std::option::Option::Some(is.read_string()?);
-                    },
+                    }
                     21 => {
                         self.float_value = ::std::option::Option::Some(is.read_float()?);
-                    },
+                    }
                     25 => {
                         self.double_value = ::std::option::Option::Some(is.read_double()?);
-                    },
+                    }
                     32 => {
                         self.int_value = ::std::option::Option::Some(is.read_int64()?);
-                    },
+                    }
                     40 => {
                         self.uint_value = ::std::option::Option::Some(is.read_uint64()?);
-                    },
+                    }
                     48 => {
                         self.sint_value = ::std::option::Option::Some(is.read_sint64()?);
-                    },
+                    }
                     56 => {
                         self.bool_value = ::std::option::Option::Some(is.read_bool()?);
-                    },
+                    }
                     tag => {
-                        ::protobuf::rt::read_unknown_or_skip_group(tag, is, self.special_fields.mut_unknown_fields())?;
-                    },
+                        ::protobuf::rt::read_unknown_or_skip_group(
+                            tag,
+                            is,
+                            self.special_fields.mut_unknown_fields(),
+                        )?;
+                    }
                 };
             }
             ::std::result::Result::Ok(())
@@ -444,7 +456,10 @@ pub mod tile {
             my_size
         }
 
-        fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::Result<()> {
+        fn write_to_with_cached_sizes(
+            &self,
+            os: &mut ::protobuf::CodedOutputStream<'_>,
+        ) -> ::protobuf::Result<()> {
             if let Some(v) = self.string_value.as_ref() {
                 os.write_string(1, v)?;
             }
@@ -511,7 +526,7 @@ pub mod tile {
     // @@protoc_insertion_point(message:vector_tile.Tile.Feature)
     #[derive(GodotClass)]
     #[class(init, rename=MvtFeature)]
-    #[derive(PartialEq,Clone,Default,Debug)]
+    #[derive(PartialEq, Clone, Default, Debug)]
     pub struct Feature {
         // message fields
         // @@protoc_insertion_point(field:vector_tile.Tile.Feature.id)
@@ -633,7 +648,6 @@ pub mod tile {
             }
             sequences
         }
-
     }
 
     impl ::protobuf::Message for Feature {
@@ -643,30 +657,37 @@ pub mod tile {
             true
         }
 
-        fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::Result<()> {
+        fn merge_from(
+            &mut self,
+            is: &mut ::protobuf::CodedInputStream<'_>,
+        ) -> ::protobuf::Result<()> {
             while let Some(tag) = is.read_raw_tag_or_eof()? {
                 match tag {
                     8 => {
                         self.id = ::std::option::Option::Some(is.read_uint64()?);
-                    },
+                    }
                     18 => {
                         is.read_repeated_packed_uint32_into(&mut self.tags)?;
-                    },
+                    }
                     16 => {
                         self.tags.push(is.read_uint32()?);
-                    },
+                    }
                     24 => {
                         self.type_ = ::std::option::Option::Some(is.read_enum_or_unknown()?);
-                    },
+                    }
                     34 => {
                         is.read_repeated_packed_uint32_into(&mut self.geometry)?;
-                    },
+                    }
                     32 => {
                         self.geometry.push(is.read_uint32()?);
-                    },
+                    }
                     tag => {
-                        ::protobuf::rt::read_unknown_or_skip_group(tag, is, self.special_fields.mut_unknown_fields())?;
-                    },
+                        ::protobuf::rt::read_unknown_or_skip_group(
+                            tag,
+                            is,
+                            self.special_fields.mut_unknown_fields(),
+                        )?;
+                    }
                 };
             }
             ::std::result::Result::Ok(())
@@ -689,7 +710,10 @@ pub mod tile {
             my_size
         }
 
-        fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::Result<()> {
+        fn write_to_with_cached_sizes(
+            &self,
+            os: &mut ::protobuf::CodedOutputStream<'_>,
+        ) -> ::protobuf::Result<()> {
             if let Some(v) = self.id {
                 os.write_uint64(1, v)?;
             }
@@ -735,8 +759,7 @@ pub mod tile {
     }
 
     // @@protoc_insertion_point(message:vector_tile.Tile.Layer)
-    #[derive(PartialEq,Clone,Default,Debug)]
-    #[derive(GodotClass)]
+    #[derive(PartialEq, Clone, Default, Debug, GodotClass)]
     #[class(init,rename=MvtLayer)]
     pub struct Layer {
         // message fields
@@ -837,7 +860,9 @@ pub mod tile {
 
         // Take field
         pub fn take_name(&mut self) -> ::std::string::String {
-            self.name.take().unwrap_or_else(|| ::std::string::String::new())
+            self.name
+                .take()
+                .unwrap_or_else(|| ::std::string::String::new())
         }
 
         // optional uint32 extent = 5;
@@ -893,39 +918,46 @@ pub mod tile {
                 if !v.is_initialized() {
                     return false;
                 }
-            };
+            }
             for v in &self.values {
                 if !v.is_initialized() {
                     return false;
                 }
-            };
+            }
             true
         }
 
-        fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::Result<()> {
+        fn merge_from(
+            &mut self,
+            is: &mut ::protobuf::CodedInputStream<'_>,
+        ) -> ::protobuf::Result<()> {
             while let Some(tag) = is.read_raw_tag_or_eof()? {
                 match tag {
                     120 => {
                         self.version = ::std::option::Option::Some(is.read_uint32()?);
-                    },
+                    }
                     10 => {
                         self.name = ::std::option::Option::Some(is.read_string()?);
-                    },
+                    }
                     18 => {
                         self.features.push(is.read_message()?);
-                    },
+                    }
                     26 => {
                         self.keys.push(is.read_string()?);
-                    },
+                    }
                     34 => {
                         self.values.push(is.read_message()?);
-                    },
+                    }
                     40 => {
                         self.extent = ::std::option::Option::Some(is.read_uint32()?);
-                    },
+                    }
                     tag => {
-                        ::protobuf::rt::read_unknown_or_skip_group(tag, is, self.special_fields.mut_unknown_fields())?;
-                    },
+                        ::protobuf::rt::read_unknown_or_skip_group(
+                            tag,
+                            is,
+                            self.special_fields.mut_unknown_fields(),
+                        )?;
+                    }
                 };
             }
             ::std::result::Result::Ok(())
@@ -944,14 +976,14 @@ pub mod tile {
             for value in &self.features {
                 let len = value.compute_size();
                 my_size += 1 + ::protobuf::rt::compute_raw_varint64_size(len) + len;
-            };
+            }
             for value in &self.keys {
                 my_size += ::protobuf::rt::string_size(3, &value);
-            };
+            }
             for value in &self.values {
                 let len = value.compute_size();
                 my_size += 1 + ::protobuf::rt::compute_raw_varint64_size(len) + len;
-            };
+            }
             if let Some(v) = self.extent {
                 my_size += ::protobuf::rt::uint32_size(5, v);
             }
@@ -960,7 +992,10 @@ pub mod tile {
             my_size
         }
 
-        fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::Result<()> {
+        fn write_to_with_cached_sizes(
+            &self,
+            os: &mut ::protobuf::CodedOutputStream<'_>,
+        ) -> ::protobuf::Result<()> {
             if let Some(v) = self.version {
                 os.write_uint32(15, v)?;
             }
@@ -969,13 +1004,13 @@ pub mod tile {
             }
             for v in &self.features {
                 ::protobuf::rt::write_message_field_with_cached_size(2, v, os)?;
-            };
+            }
             for v in &self.keys {
                 os.write_string(3, &v)?;
-            };
+            }
             for v in &self.values {
                 ::protobuf::rt::write_message_field_with_cached_size(4, v, os)?;
-            };
+            }
             if let Some(v) = self.extent {
                 os.write_uint32(5, v)?;
             }
@@ -1019,7 +1054,7 @@ pub mod tile {
         }
     }
 
-    #[derive(Clone,Copy,PartialEq,Eq,Debug,Hash)]
+    #[derive(Clone, Copy, PartialEq, Eq, Debug, Hash)]
     // @@protoc_insertion_point(enum:vector_tile.Tile.GeomType)
     #[derive(FromGodot, ToGodot, GodotConvert)]
     pub enum GeomType {
@@ -1046,7 +1081,7 @@ pub mod tile {
                 1 => ::std::option::Option::Some(GeomType::POINT),
                 2 => ::std::option::Option::Some(GeomType::LINESTRING),
                 3 => ::std::option::Option::Some(GeomType::POLYGON),
-                _ => ::std::option::Option::None
+                _ => ::std::option::Option::None,
             }
         }
 
@@ -1056,7 +1091,7 @@ pub mod tile {
                 "POINT" => ::std::option::Option::Some(GeomType::POINT),
                 "LINESTRING" => ::std::option::Option::Some(GeomType::LINESTRING),
                 "POLYGON" => ::std::option::Option::Some(GeomType::POLYGON),
-                _ => ::std::option::Option::None
+                _ => ::std::option::Option::None,
             }
         }
 
@@ -1073,9 +1108,7 @@ pub mod tile {
             GeomType::UNKNOWN
         }
     }
-
 }
-
 
 #[cfg(test)]
 mod test {
