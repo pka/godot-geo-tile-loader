@@ -27,7 +27,7 @@ jobs:
           ext: so
         - target: x86_64-pc-windows-msvc
           os: windows-latest
-          target_rustflags: '-j 1' # Workaround for "LLVM ERROR: out of memory"
+          target_rustflags: '' # Debug build as workaround for https://github.com/godot-rust/gdext/issues/450
           ext: dll
         - target: x86_64-apple-darwin
           os: macos-latest
