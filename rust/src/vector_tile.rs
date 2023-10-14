@@ -152,6 +152,8 @@ pub mod tile {
 
     // @@protoc_insertion_point(message:vector_tile.Tile.Value)
     #[derive(PartialEq,Clone,Default,Debug)]
+    #[derive(GodotClass)]
+    #[class(init,rename=MvtValue)]
     pub struct Value {
         // message fields
         // @@protoc_insertion_point(field:vector_tile.Tile.Value.string_value)
@@ -179,6 +181,7 @@ pub mod tile {
         }
     }
 
+    #[godot_api]
     impl Value {
         pub fn new() -> Value {
             ::std::default::Default::default()
@@ -186,24 +189,36 @@ pub mod tile {
 
         // optional string string_value = 1;
 
-        pub fn string_value(&self) -> &str {
+        pub fn string_value_str(&self) -> &str {
             match self.string_value.as_ref() {
                 Some(v) => v,
                 None => "",
             }
         }
 
+        #[func]
+        pub fn string_value(&self) -> GodotString {
+            GodotString::from(self.string_value_str())
+        }
+
+        #[func]
         pub fn clear_string_value(&mut self) {
             self.string_value = ::std::option::Option::None;
         }
 
+        #[func]
         pub fn has_string_value(&self) -> bool {
             self.string_value.is_some()
         }
 
         // Param is passed by value, moved
-        pub fn set_string_value(&mut self, v: ::std::string::String) {
+        pub fn set_string_value_string(&mut self, v: ::std::string::String) {
             self.string_value = ::std::option::Option::Some(v);
+        }
+
+        #[func]
+        pub fn set_string_value(&mut self, v: GodotString) {
+            self.set_string_value_string(v.into());
         }
 
         // Mutable pointer to the field.
@@ -222,114 +237,138 @@ pub mod tile {
 
         // optional float float_value = 2;
 
+        #[func]
         pub fn float_value(&self) -> f32 {
             self.float_value.unwrap_or(0.)
         }
 
+        #[func]
         pub fn clear_float_value(&mut self) {
             self.float_value = ::std::option::Option::None;
         }
 
+        #[func]
         pub fn has_float_value(&self) -> bool {
             self.float_value.is_some()
         }
 
         // Param is passed by value, moved
+        #[func]
         pub fn set_float_value(&mut self, v: f32) {
             self.float_value = ::std::option::Option::Some(v);
         }
 
         // optional double double_value = 3;
 
+        #[func]
         pub fn double_value(&self) -> f64 {
             self.double_value.unwrap_or(0.)
         }
 
+        #[func]
         pub fn clear_double_value(&mut self) {
             self.double_value = ::std::option::Option::None;
         }
 
+        #[func]
         pub fn has_double_value(&self) -> bool {
             self.double_value.is_some()
         }
 
         // Param is passed by value, moved
+        #[func]
         pub fn set_double_value(&mut self, v: f64) {
             self.double_value = ::std::option::Option::Some(v);
         }
 
         // optional int64 int_value = 4;
 
+        #[func]
         pub fn int_value(&self) -> i64 {
             self.int_value.unwrap_or(0)
         }
 
+        #[func]
         pub fn clear_int_value(&mut self) {
             self.int_value = ::std::option::Option::None;
         }
 
+        #[func]
         pub fn has_int_value(&self) -> bool {
             self.int_value.is_some()
         }
 
         // Param is passed by value, moved
+        #[func]
         pub fn set_int_value(&mut self, v: i64) {
             self.int_value = ::std::option::Option::Some(v);
         }
 
         // optional uint64 uint_value = 5;
 
+        #[func]
         pub fn uint_value(&self) -> u64 {
             self.uint_value.unwrap_or(0)
         }
 
+        #[func]
         pub fn clear_uint_value(&mut self) {
             self.uint_value = ::std::option::Option::None;
         }
 
+        #[func]
         pub fn has_uint_value(&self) -> bool {
             self.uint_value.is_some()
         }
 
         // Param is passed by value, moved
+        #[func]
         pub fn set_uint_value(&mut self, v: u64) {
             self.uint_value = ::std::option::Option::Some(v);
         }
 
         // optional sint64 sint_value = 6;
 
+        #[func]
         pub fn sint_value(&self) -> i64 {
             self.sint_value.unwrap_or(0)
         }
 
+        #[func]
         pub fn clear_sint_value(&mut self) {
             self.sint_value = ::std::option::Option::None;
         }
 
+        #[func]
         pub fn has_sint_value(&self) -> bool {
             self.sint_value.is_some()
         }
 
         // Param is passed by value, moved
+        #[func]
         pub fn set_sint_value(&mut self, v: i64) {
             self.sint_value = ::std::option::Option::Some(v);
         }
 
         // optional bool bool_value = 7;
 
+        #[func]
         pub fn bool_value(&self) -> bool {
             self.bool_value.unwrap_or(false)
         }
 
+        #[func]
         pub fn clear_bool_value(&mut self) {
             self.bool_value = ::std::option::Option::None;
         }
 
+        #[func]
         pub fn has_bool_value(&self) -> bool {
             self.bool_value.is_some()
         }
 
         // Param is passed by value, moved
+        #[func]
         pub fn set_bool_value(&mut self, v: bool) {
             self.bool_value = ::std::option::Option::Some(v);
         }
@@ -554,6 +593,17 @@ pub mod tile {
         pub fn set_type(&mut self, v: GeomType) {
             self.type_ = ::std::option::Option::Some(::protobuf::EnumOrUnknown::new(v));
         }
+
+        #[func]
+        pub fn tags(&self) -> Array<u32> {
+            Array::from_iter(self.tags.iter().map(|el| *el))
+        }
+
+        #[func]
+        pub fn geometry(&self) -> Array<u32> {
+            Array::from_iter(self.geometry.iter().map(|el| *el))
+        }
+
     }
 
     impl ::protobuf::Message for Feature {
@@ -786,6 +836,16 @@ pub mod tile {
         #[func]
         pub fn features(&self) -> Array<Gd<Feature>> {
             Array::from_iter(self.features.iter().map(|el| Gd::new(el.clone())))
+        }
+
+        #[func]
+        pub fn keys(&self) -> Array<GodotString> {
+            Array::from_iter(self.keys.iter().map(|el| el.into()))
+        }
+
+        #[func]
+        pub fn values(&self) -> Array<Gd<Value>> {
+            Array::from_iter(self.values.iter().map(|el| Gd::new(el.clone())))
         }
     }
 
