@@ -89,6 +89,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "godot-mvt"
+version = "0.1.0"
+dependencies = [
+ "godot",
+ "protobuf",
+]
+
+[[package]]
 name = "godot4-prebuilt"
 version = "0.0.0"
 source = "git+https://github.com/godot-rust/godot4-prebuilt?branch=4.1.1#fca6897dbfb1a2d9387f81491acd77f6f091b8c4"
@@ -104,14 +112,6 @@ name = "memchr"
 version = "2.6.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f665ee40bc4a3c5590afb1e9677db74a508659dfd71e126420da8274909a0167"
-
-[[package]]
-name = "mvt"
-version = "0.1.0"
-dependencies = [
- "godot",
- "protobuf",
-]
 
 [[package]]
 name = "nanoserde"
