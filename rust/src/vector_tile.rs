@@ -148,6 +148,7 @@ impl ::protobuf::Message for Tile {
 
 /// Nested message and enums of message `Tile`
 pub mod tile {
+    use crate::mvt_commands::{CommandInteger, ParameterInteger};
     use godot::prelude::*;
 
     // @@protoc_insertion_point(message:vector_tile.Tile.Value)
@@ -600,8 +601,37 @@ pub mod tile {
         }
 
         #[func]
-        pub fn geometry(&self) -> Array<u32> {
+        pub fn geometry_raw(&self) -> Array<u32> {
             Array::from_iter(self.geometry.iter().map(|el| *el))
+        }
+
+        #[func]
+        pub fn geometry(&self) -> Array<Array<i32>> {
+            let mut sequences = Array::new();
+            let mut i = 0;
+            while i < self.geometry.len() {
+                let command = CommandInteger(self.geometry[i]);
+                let cmd_id = command.id();
+                let arg_count = command.count() as usize
+                    * match cmd_id {
+                        // MoveTo = 1,
+                        // LineTo = 2,
+                        // ClosePath = 7,
+                        1 | 2 => 2,
+                        _ => 0,
+                    };
+                i += 1;
+                let seq = Array::from_iter(
+                    [cmd_id as i32].into_iter().chain(
+                        self.geometry[i..i + arg_count]
+                            .iter()
+                            .map(|arg| ParameterInteger(*arg).value()),
+                    ),
+                );
+                i += arg_count;
+                sequences.push(seq);
+            }
+            sequences
         }
 
     }

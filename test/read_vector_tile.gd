@@ -57,9 +57,13 @@ func decode_tile():
 	if type["GeomType"] != "POINT":
 		printerr("feature.geom_type() != POINT")
 
-	var geometry = feature.geometry()
+	var geometry = feature.geometry_raw()
 	if geometry != [9, 1310, 3166]:
 		printerr("geometry != [9, 1310, 3166]")
+
+	geometry = feature.geometry()
+	if geometry != [[1, 655, 1583]]:
+		printerr("geometry !=  [[1, 655, 1583]]")
 
 func load_tiles():
 	var tile = Mvt.load_tile("test/data/tile.mvt")
