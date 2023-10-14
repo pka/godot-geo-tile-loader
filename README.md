@@ -6,7 +6,7 @@ for loading Mapbox Vector Tiles.
 
 ## Installation
 
-Download the latest build artifact `godot-geo-tile-loader-plugin` from 
+Download the latest `godot-geo-tile-loader-plugin` build artifact from 
 https://github.com/pka/godot-geo-tile-loader/actions and unzip it in the base 
 directory of your Godot project.
 
@@ -18,7 +18,8 @@ See the GDScript files in `test` as an example.
 
 ## Plugin developement
 
-First, make sure to follow the setup instructions for [the gdextension crate](https://github.com/godot-rust/gdextension)
+First, [install Rust](https://www.rust-lang.org/tools/install).
+
 `cd rust`
 
 `cargo build`

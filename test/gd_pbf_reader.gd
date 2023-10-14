@@ -2,18 +2,18 @@
 
 extends EditorScript
 
-const GdVectorTile = preload("res://vector_tile.gd")
+const VectorTile = preload("res://vector_tile.gd")
 
-func read_tile(bytes) -> GdVectorTile.Tile:
-	var tile = GdVectorTile.Tile.new()
+func read_tile(bytes) -> VectorTile.Tile:
+	var tile = VectorTile.Tile.new()
 	var rc = tile.from_bytes(bytes)
-	if rc == GdVectorTile.PB_ERR.NO_ERRORS:
+	if rc == VectorTile.PB_ERR.NO_ERRORS:
 		return tile
 	else:
 		printerr("Error reading tile. PB_ERR=%d" % rc)
 		return
 
-func load_tile(fn) -> GdVectorTile.Tile:
+func load_tile(fn) -> VectorTile.Tile:
 	var bytes = FileAccess.get_file_as_bytes(fn)
 	return read_tile(bytes)
 
@@ -59,8 +59,8 @@ func _run():
 		printerr("value._float_value != null")
 
 	var type = feature.get_type()
-	if type != GdVectorTile.Tile.GeomType.POINT:
-		printerr("type != GdVectorTile.Tile.GeomType.POINT")
+	if type != VectorTile.Tile.GeomType.POINT:
+		printerr("type != VectorTile.Tile.GeomType.POINT")
 
 	var geometry = feature.get_geometry()
 	if geometry != [9, 1310, 3166]:
