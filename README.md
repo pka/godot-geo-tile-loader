@@ -37,4 +37,4 @@ Or for a release build:
 `cargo build --release`
 
 
-After building, copy `godot_eqloader.dll` (or `.dylib` or `.so`) from `./target/release/` into addons directory.
+After building, copy `godot_mvt.dll` (or `.dylib` or `.so`) from `./target/release/` into addons directory.
