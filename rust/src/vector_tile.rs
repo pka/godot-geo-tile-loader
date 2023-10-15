@@ -52,6 +52,7 @@ impl Tile {
     }
     #[func]
     pub fn layers(&self) -> Array<Gd<tile::Layer>> {
+        // TODO: we should also give Layer access without clone
         Array::from_iter(self.layers.iter().map(|el| Gd::new(el.clone())))
     }
     #[func]
@@ -378,6 +379,28 @@ pub mod tile {
         pub fn set_bool_value(&mut self, v: bool) {
             self.bool_value = ::std::option::Option::Some(v);
         }
+
+        #[func]
+        // could we impl ToGodot?
+        pub fn to_variant(&self) -> Variant {
+            if let Some(string_value) = &self.string_value {
+                Variant::from(string_value.clone())
+            } else if let Some(float_value) = self.float_value {
+                Variant::from(float_value)
+            } else if let Some(double_value) = self.double_value {
+                Variant::from(double_value)
+            } else if let Some(int_value) = self.int_value {
+                Variant::from(int_value)
+            } else if let Some(uint_value) = self.uint_value {
+                Variant::from(uint_value)
+            } else if let Some(sint_value) = self.sint_value {
+                Variant::from(sint_value)
+            } else if let Some(bool_value) = self.bool_value {
+                Variant::from(bool_value)
+            } else {
+                Variant::nil()
+            }
+        }
     }
 
     impl ::protobuf::Message for Value {
@@ -611,8 +634,20 @@ pub mod tile {
         }
 
         #[func]
-        pub fn tags(&self) -> Array<u32> {
+        pub fn tag_array(&self) -> Array<u32> {
             Array::from_iter(self.tags.iter().map(|el| *el))
+        }
+
+        #[func]
+        pub fn tags(&self, layer: Gd<Layer>) -> Dictionary {
+            let keys = &layer.bind().keys;
+            let values = &layer.bind().values;
+            Dictionary::from_iter(self.tags.chunks(2).map(|kv| {
+                (
+                    keys[kv[0] as usize].clone(),
+                    values[kv[1] as usize].to_variant(),
+                )
+            }))
         }
 
         #[func]
@@ -890,6 +925,7 @@ pub mod tile {
 
         #[func]
         pub fn features(&self) -> Array<Gd<Feature>> {
+            // TODO: we should also give feature access without clone
             Array::from_iter(self.features.iter().map(|el| Gd::new(el.clone())))
         }
 
@@ -899,8 +935,8 @@ pub mod tile {
         }
 
         #[func]
-        pub fn values(&self) -> Array<Gd<Value>> {
-            Array::from_iter(self.values.iter().map(|el| Gd::new(el.clone())))
+        pub fn values(&self) -> Array<Variant> {
+            Array::from_iter(self.values.iter().map(|el| el.to_variant()))
         }
     }
 

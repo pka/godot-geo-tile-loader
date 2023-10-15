@@ -41,17 +41,11 @@ func decode_tile():
 	if feature.id() != 0:
 		printerr("feature.id() != 0")
 
-	var tags = feature.tags()
-	if tags != [0, 1]:
-		printerr("tags != [0, 1]")
-	var key = keys[tags[0]]
-	var value = values[tags[1]]
-	if key != "name":
-		printerr("key != name")
-	if value.string_value() != "San Francisco":
-		printerr("value != San Francisco")
-	if value.float_value() != 0.0:
-		printerr("value._float_value != null")
+	var tags = feature.tags(layer)
+	if tags["name"] != "San Francisco":
+		printerr("tags[name] != San Francisco")
+	if tags.has("xxx"):
+		printerr("tags.has(xxx) != false")
 
 	var type = feature.geom_type()
 	if type["GeomType"] != "POINT":
