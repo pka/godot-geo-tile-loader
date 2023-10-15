@@ -639,6 +639,7 @@ pub mod tile {
         }
 
         #[func]
+        /// Tags as Dictionary with values of type Variant
         pub fn tags(&self, layer: Gd<Layer>) -> Dictionary {
             let keys = &layer.bind().keys;
             let values = &layer.bind().values;
@@ -656,6 +657,9 @@ pub mod tile {
         }
 
         #[func]
+        /// Decoded geometry command sequences
+        /// [Example Linestring](https://github.com/mapbox/vector-tile-spec/tree/master/2.1#4353-example-linestring):
+        /// `[[1 <MoveTo>, 2, 2], [2 <LineTo>, 0, 8, 8, 0]]`
         pub fn geometry(&self) -> Array<Array<i32>> {
             let mut sequences = Array::new();
             let mut i = 0;
@@ -671,15 +675,19 @@ pub mod tile {
                         _ => 0,
                     };
                 i += 1;
-                let seq = Array::from_iter(
-                    [cmd_id as i32].into_iter().chain(
-                        self.geometry[i..i + arg_count]
-                            .iter()
-                            .map(|arg| ParameterInteger(*arg).value()),
-                    ),
-                );
-                i += arg_count;
+                let seq = if arg_count > 0 {
+                    Array::from_iter(
+                        [cmd_id as i32].into_iter().chain(
+                            self.geometry[i..i + arg_count]
+                                .iter()
+                                .map(|arg| ParameterInteger(*arg).value()),
+                        ),
+                    )
+                } else {
+                    array![cmd_id as i32]
+                };
                 sequences.push(seq);
+                i += arg_count;
             }
             sequences
         }
@@ -1149,6 +1157,43 @@ pub mod tile {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::mvt_commands::{CommandInteger, ParameterInteger};
+
+    impl tile::Feature {
+        // Same as geometry(), but without Godot types
+        fn geometry_vec(&self) -> Vec<Vec<i32>> {
+            let mut sequences = Vec::new();
+            let mut i = 0;
+            while i < self.geometry.len() {
+                let command = CommandInteger(self.geometry[i]);
+                let cmd_id = command.id();
+                let arg_count = command.count() as usize
+                    * match cmd_id {
+                        // MoveTo = 1,
+                        // LineTo = 2,
+                        // ClosePath = 7,
+                        1 | 2 => 2,
+                        _ => 0,
+                    };
+                i += 1;
+                let seq = if arg_count > 0 {
+                    [cmd_id as i32]
+                        .into_iter()
+                        .chain(
+                            self.geometry[i..i + arg_count]
+                                .iter()
+                                .map(|arg| ParameterInteger(*arg).value()),
+                        )
+                        .collect()
+                } else {
+                    vec![cmd_id as i32]
+                };
+                sequences.push(seq);
+                i += arg_count;
+            }
+            sequences
+        }
+    }
 
     #[test]
     fn load_file() {
@@ -1156,5 +1201,54 @@ mod test {
         let tile = Tile::parse_from_bytes(&bytes).unwrap();
         dbg!(&tile);
         assert_eq!(tile.layers.len(), 1);
+    }
+
+    #[test]
+    fn decode_line() {
+        // https://github.com/mapbox/vector-tile-spec/tree/master/2.1#4353-example-linestring
+        let feature = tile::Feature {
+            geometry: vec![9, 4, 4, 18, 0, 16, 16, 0],
+            ..Default::default()
+        };
+        assert_eq!(
+            feature.geometry_vec(),
+            vec![vec![1, 2, 2], vec![2, 0, 8, 8, 0]]
+        );
+    }
+
+    #[test]
+    fn decode_multi_point() {
+        // https://github.com/mapbox/vector-tile-spec/tree/master/2.1#4352-example-multi-point
+        let feature = tile::Feature {
+            geometry: vec![17, 10, 14, 3, 9],
+            ..Default::default()
+        };
+        assert_eq!(feature.geometry_vec(), vec![vec![1, 5, 7, -2, -5]]);
+    }
+
+    #[test]
+    fn decode_multipoly() {
+        // https://github.com/mapbox/vector-tile-spec/tree/master/2.1#4356-example-multi-polygon
+        let feature = tile::Feature {
+            geometry: vec![
+                9, 0, 0, 26, 20, 0, 0, 20, 19, 0, 15, 9, 22, 2, 26, 18, 0, 0, 18, 17, 0, 15, 9, 4,
+                13, 26, 0, 8, 8, 0, 0, 7, 15,
+            ],
+            ..Default::default()
+        };
+        assert_eq!(
+            feature.geometry_vec(),
+            vec![
+                vec![1, 0, 0],
+                vec![2, 10, 0, 0, 10, -10, 0],
+                vec![7],
+                vec![1, 11, 1],
+                vec![2, 9, 0, 0, 9, -9, 0],
+                vec![7],
+                vec![1, 2, -7],
+                vec![2, 0, 4, 4, 0, 0, -4],
+                vec![7]
+            ]
+        );
     }
 }
