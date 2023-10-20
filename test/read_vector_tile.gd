@@ -19,6 +19,9 @@ func decode_tile():
 	if layer.name() != "cities":
 		printerr("layer.name() != cities")
 
+	if layer.extent() != 4096:
+		printerr("layer.extent() != 4096", layer.extent())
+
 	var features = layer.features()
 	if features.size() != 68:
 		printerr("features.size() != 68")
@@ -67,3 +70,6 @@ func large_tile():
 	var layer = layers[0]
 	if layer.name() != "point":
 		printerr("layer.name() != point")
+
+	if layer.extent() != 65536:
+		printerr("layer.extent() != 65536")

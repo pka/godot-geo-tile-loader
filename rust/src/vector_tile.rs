@@ -1251,4 +1251,64 @@ mod test {
             ]
         );
     }
+
+    #[test]
+    fn decode_ways() {
+        // https://www.openstreetmap.org/way/546150171
+        let feature = tile::Feature {
+            geometry: vec![
+                9, 75416, 14272, 66, 487, 831, 8120, 4799, 432, 728, 6200, 9216, 1183, 744, 1400,
+                2464, 1047, 600, 6247, 3816, 15,
+            ],
+            ..Default::default()
+        };
+        assert_eq!(
+            feature.geometry_vec(),
+            vec![
+                vec![1, 37708, 7136],
+                vec![
+                    2, -244, -416, 4060, -2400, 216, 364, 3100, 4608, -592, 372, 700, 1232, -524,
+                    300, -3124, 1908
+                ],
+                vec![7]
+            ]
+        );
+
+        // https://www.openstreetmap.org/way/1156067124
+        let feature = tile::Feature {
+            geometry: vec![9, 83328, 10896, 26, 167, 279, 1015, 1703, 1631, 2735],
+            ..Default::default()
+        };
+        assert_eq!(
+            feature.geometry_vec(),
+            vec![
+                vec![1, 41664, 5448],
+                vec![2, -84, -140, -508, -852, -816, -1368]
+            ]
+        );
+
+        // https://www.openstreetmap.org/way/235330871
+        let feature = tile::Feature {
+            geometry: vec![
+                9, 35896, 2928, 10, 752, 928, 9, 5808, 7840, 10, 743, 1023, 9, 62704, 26952, 18,
+                2007, 2488, 5175, 808, 9, 33192, 83256, 10, 384, 231, 9, 1040, 583, 10, 344, 207,
+            ],
+            ..Default::default()
+        };
+        assert_eq!(
+            feature.geometry_vec(),
+            vec![
+                vec![1, 17948, 1464],
+                vec![2, 376, 464],
+                vec![1, 2904, 3920],
+                vec![2, -372, -512],
+                vec![1, 31352, 13476],
+                vec![2, -1004, 1244, -2588, 404],
+                vec![1, 16596, 41628],
+                vec![2, 192, -116],
+                vec![1, 520, -292],
+                vec![2, 172, -104]
+            ]
+        );
+    }
 }
