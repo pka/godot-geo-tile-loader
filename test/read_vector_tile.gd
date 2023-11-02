@@ -7,6 +7,7 @@ const Mvt = preload("res://addons/geo-tile-loader/vector_tile_loader.gd")
 func _run():
 	decode_tile()
 	load_tiles()
+	large_tile()
 	print("Tests finished")
 
 func decode_tile():
@@ -62,6 +63,7 @@ func load_tiles():
 	tile = MvtTile.load("test/data/tile.mvt")
 
 func large_tile():
+	# Tile 16/34323/22949
 	var tile = MvtTile.load("test/data/22949.mvt")
 	var layers = tile.layers()
 	if layers.size() != 7:
@@ -73,3 +75,19 @@ func large_tile():
 
 	if layer.extent() != 65536:
 		printerr("layer.extent() != 65536")
+
+	layer = layers[5]
+	if layer.name() != "buildings":
+		printerr("layer.name() != buildings")
+
+	for feature in layer.features():
+		var tags = feature.tags(layer)
+		if tags.has("name") and tags["name"] == "Pfrundhaus":
+			# print(tags)
+			var reftags = { "type": "building", "osmId": 24910306, "levels": 3, "buildingType": "residential", "roofType": "hipped", "roofLevels": 1 }
+			for key in reftags.keys():
+				if tags[key] != reftags[key]:
+					printerr("tags[", key , "] != ", reftags[key], " (", tags[key], ")")
+			# Compare floats
+			if not is_equal_approx(tags["@ombb00"], 0.52373960893601):
+					printerr("tags[@ombb00] != 0.52373960893601")
