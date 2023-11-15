@@ -56,6 +56,19 @@ impl Tile {
         Array::from_iter(self.layers.iter().map(|el| Gd::new(el.clone())))
     }
     #[func]
+    pub fn layer_names(&self) -> Array<GodotString> {
+        Array::from_iter(self.layers.iter().map(|el| el.name_str().into()))
+    }
+    #[func]
+    pub fn layer(&self, name: GodotString) -> Option<Gd<tile::Layer>> {
+        let name = String::from_iter(name.chars_checked());
+        // TODO: we should also give Layer access without clone
+        self.layers
+            .iter()
+            .find(|el| el.name_str() == &name)
+            .map(|el| Gd::new(el.clone()))
+    }
+    #[func]
     /// Read Tile from byte array
     pub fn read(bytes: PackedByteArray) -> Gd<Tile> {
         let tile = Tile::parse_from_bytes(bytes.as_slice()).unwrap();

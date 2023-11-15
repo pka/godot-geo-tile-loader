@@ -13,13 +13,14 @@ func _run():
 
 func decode_tile():
 	var tile = Mvt.load_tile("test/data/tile.mvt")
-	var layers = tile.layers()
-	if layers.size() != 1:
-		printerr("tile.layers().size() != 1")
+	var layers = tile.layer_names()
+	if layers != ["cities"]:
+		printerr("tile.layer_names() != [cities]")
 
-	var layer = layers[0]
-	if layer.name() != "cities":
-		printerr("layer.name() != cities")
+	if tile.layer("xxx") != null:
+		printerr("tile.layer(xxx) != null")
+
+	var layer = tile.layer("cities")
 
 	if layer.extent() != 4096:
 		printerr("layer.extent() != 4096", layer.extent())
@@ -96,17 +97,10 @@ func large_tile():
 func zh_tile():
 	# Tile 16/34327/42594.pbf
 	var tile = MvtTile.load("test/data/42594.mvt")
-	var layers = tile.layers()
-	if layers.size() != 5:
-		printerr("tile.layers().size() != 5")
-
-	for layer in layers:
-		print(layer.name())
-
-	var layer = layers[3]
-	if layer.name() != "buildings":
-		printerr("layer.name() != buildings")
-
+	var layers = tile.layer_names()
+	if layers != ["point", "highways", "common", "buildings", "barriers"]:
+		printerr("tile.layer_names() != [point, highways, common, buildings, barriers]")
+	var layer = tile.layer("buildings")
 	for feature in layer.features():
 		var tags = feature.tags(layer)
 		if tags.get("name", "") == "Werkerei":
