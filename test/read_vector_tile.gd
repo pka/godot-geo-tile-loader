@@ -8,6 +8,7 @@ func _run():
 	decode_tile()
 	load_tiles()
 	large_tile()
+	zh_tile()
 	print("Tests finished")
 
 func decode_tile():
@@ -91,3 +92,29 @@ func large_tile():
 			# Compare floats
 			if not is_equal_approx(tags["@ombb00"], 0.52373960893601):
 					printerr("tags[@ombb00] != 0.52373960893601")
+
+func zh_tile():
+	# Tile 16/34327/42594.pbf
+	var tile = MvtTile.load("test/data/42594.mvt")
+	var layers = tile.layers()
+	if layers.size() != 5:
+		printerr("tile.layers().size() != 5")
+
+	for layer in layers:
+		print(layer.name())
+
+	var layer = layers[3]
+	if layer.name() != "buildings":
+		printerr("layer.name() != buildings")
+
+	for feature in layer.features():
+		var tags = feature.tags(layer)
+		if tags.get("name", "") == "Werkerei":
+			# print(tags)
+			var reftags = { "roofType": "flat", "type": "building", "osmId": 122456094, "name": "Werkerei", "osmType": 1, "levels": 3, "buildingType": "commercial" }
+			for key in reftags.keys():
+				if tags[key] != reftags[key]:
+					printerr("tags[", key , "] != ", reftags[key], " (", tags[key], ")")
+			# Compare floats
+			if not is_equal_approx(tags["@ombb00"], 0.52380263099643):
+					printerr("tags[@ombb00] != 0.52380263099643")
