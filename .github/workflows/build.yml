@@ -23,19 +23,15 @@ jobs:
         include:
         - target: x86_64-unknown-linux-gnu
           os: ubuntu-20.04
-          target_rustflags: '--release'
           ext: so
         - target: x86_64-pc-windows-msvc
           os: windows-latest
-          target_rustflags: '' # Debug build as workaround for https://github.com/godot-rust/gdext/issues/450
           ext: dll
         - target: x86_64-apple-darwin
           os: macos-latest
-          target_rustflags: '--release'
           ext: dylib
         # - target: aarch64-apple-darwin
         #   os: macos-latest
-        #   target_rustflags: '--release'
         #   ext: dylib
 
     runs-on: ${{matrix.os}}
@@ -53,16 +49,12 @@ jobs:
 
     - name: Build release binary
       run: |
-        cargo build --locked --target ${{ matrix.target }} ${{ matrix.target_rustflags }}
+        cargo build --locked --target ${{ matrix.target }} --release
 
     - name: Prepare archive
       run: |
         mkdir dist
-        if [[ "${{ runner.os }}" == "Windows" ]]; then
-          mv target/${{ matrix.target }}/debug/*.${{ matrix.ext }} dist/
-        else
-          mv target/${{ matrix.target }}/release/*.${{ matrix.ext }} dist/
-        fi
+        mv target/${{ matrix.target }}/release/*.${{ matrix.ext }} dist/
 
     - name: Save build artifacts
       uses: actions/upload-artifact@v3
