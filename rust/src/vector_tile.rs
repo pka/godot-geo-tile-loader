@@ -53,34 +53,34 @@ impl Tile {
     #[func]
     pub fn layers(&self) -> Array<Gd<tile::Layer>> {
         // TODO: we should also give Layer access without clone
-        Array::from_iter(self.layers.iter().map(|el| Gd::new(el.clone())))
+        Array::from_iter(self.layers.iter().map(|el| Gd::from_object(el.clone())))
     }
     #[func]
-    pub fn layer_names(&self) -> Array<GodotString> {
+    pub fn layer_names(&self) -> Array<GString> {
         Array::from_iter(self.layers.iter().map(|el| el.name_str().into()))
     }
     #[func]
-    pub fn layer(&self, name: GodotString) -> Option<Gd<tile::Layer>> {
+    pub fn layer(&self, name: GString) -> Option<Gd<tile::Layer>> {
         let name = String::from_iter(name.chars_checked());
         // TODO: we should also give Layer access without clone
         self.layers
             .iter()
             .find(|el| el.name_str() == &name)
-            .map(|el| Gd::new(el.clone()))
+            .map(|el| Gd::from_object(el.clone()))
     }
     #[func]
     /// Read Tile from byte array
     pub fn read(bytes: PackedByteArray) -> Gd<Tile> {
         let tile = Tile::parse_from_bytes(bytes.as_slice()).unwrap();
-        Gd::new(tile)
+        Gd::from_object(tile)
     }
     /// Load Tile from file
     #[func]
-    pub fn load(path: GodotString) -> Gd<Tile> {
+    pub fn load(path: GString) -> Gd<Tile> {
         let path = String::from_iter(path.chars_checked());
         let bytes = std::fs::read(&path).unwrap();
         let tile = Tile::parse_from_bytes(&bytes).unwrap();
-        Gd::new(tile)
+        Gd::from_object(tile)
     }
 }
 
@@ -215,8 +215,8 @@ pub mod tile {
         }
 
         #[func]
-        pub fn string_value(&self) -> GodotString {
-            GodotString::from(self.string_value_str())
+        pub fn string_value(&self) -> GString {
+            GString::from(self.string_value_str())
         }
 
         #[func]
@@ -235,7 +235,7 @@ pub mod tile {
         }
 
         #[func]
-        pub fn set_string_value(&mut self, v: GodotString) {
+        pub fn set_string_value(&mut self, v: GString) {
             self.set_string_value_string(v.into());
         }
 
@@ -881,8 +881,8 @@ pub mod tile {
         }
 
         #[func]
-        pub fn name(&self) -> GodotString {
-            GodotString::from(self.name_str())
+        pub fn name(&self) -> GString {
+            GString::from(self.name_str())
         }
 
         #[func]
@@ -901,7 +901,7 @@ pub mod tile {
         }
 
         #[func]
-        pub fn set_name(&mut self, v: GodotString) {
+        pub fn set_name(&mut self, v: GString) {
             self.name = Some(v.into());
         }
 
@@ -947,11 +947,11 @@ pub mod tile {
         #[func]
         pub fn features(&self) -> Array<Gd<Feature>> {
             // TODO: we should also give feature access without clone
-            Array::from_iter(self.features.iter().map(|el| Gd::new(el.clone())))
+            Array::from_iter(self.features.iter().map(|el| Gd::from_object(el.clone())))
         }
 
         #[func]
-        pub fn keys(&self) -> Array<GodotString> {
+        pub fn keys(&self) -> Array<GString> {
             Array::from_iter(self.keys.iter().map(|el| el.into()))
         }
 
